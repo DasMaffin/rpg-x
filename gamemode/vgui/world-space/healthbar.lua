@@ -1,9 +1,11 @@
 HealthbarGUI = {
     Scale = 0.1,
     BarWidth = 800,
-    BarHeight = 80,
-    DrawDistance = GetConVar("UIDrawDistance"):GetInt()
+    BarHeight = 80
 }
+local dd = GetConVar("UIDrawDistance"):GetInt()
+if dd < 64 then dd = 1024 end -- min draw distance = 64. If less default to 1024.
+HealthbarGUI.DrawDistance = dd
 
 surface.CreateFont( "PlayerTagFont", {
 	font = "Arial",
@@ -15,11 +17,10 @@ cvars.AddChangeCallback("UIDrawDistance", function(name, oldValue, newValue)
 end, "UIDrawDistanceChanged")
 
 function GM:PostDrawOpaqueRenderables( bDrawingDepth, bDrawingSkybox, isDraw3DSkybox )
-    for _, ent in ipairs(ents.FindByClass("npc_}")) do
-        print("MAN")
-        if ent:GetPos():Distance(EyePos()) < HealthbarGUI.DrawDistance then 
+    for _, ent in ipairs(ents.FindByClass("npc_*")) do
+        if ent:GetPos():Distance(EyePos()) < HealthbarGUI.DrawDistance then
             if not IsValid(ent) then continue end
-
+            
             -- Get position above entity
             local pos = ent:GetPos() + Vector(0,0,80)
 
