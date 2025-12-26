@@ -4,3 +4,5 @@ include("shared.lua")
 include("vgui/world-space/healthbar.lua")
 include("vgui/canvas-space/help/help-base-hud.lua")
 include("cl/inputmanager.lua")
+
+RPGX:ToggleHelpMenu()
