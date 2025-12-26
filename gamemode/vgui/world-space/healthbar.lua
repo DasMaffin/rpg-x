@@ -7,7 +7,7 @@ local dd = GetConVar("UIDrawDistance"):GetInt()
 if dd < 64 then dd = 1024 end -- min draw distance = 64. If less default to 1024.
 HealthbarGUI.DrawDistance = dd
 
-surface.CreateFont( "PlayerTagFont", {
+surface.CreateFont( "HealthbarNumbers", {
 	font = "Arial",
 	size = 96, -- change with scale, double scale, half size.
 } )
@@ -48,9 +48,9 @@ function GM:PostDrawOpaqueRenderables( bDrawingDepth, bDrawingSkybox, isDraw3DSk
                     HealthbarGUI.BarWidth * (hp / maxhp), 
                     HealthbarGUI.BarHeight)
 
-                surface.SetFont( "PlayerTagFont" )
+                surface.SetFont( "HealthbarNumbers" )
                 local tW, tH = surface.GetTextSize( hp .. " / " .. maxhp )
-                draw.SimpleText( hp .. " / " .. maxhp, "PlayerTagFont", -tW / 2, -tH / 2, color_white )
+                draw.SimpleText( hp .. " / " .. maxhp, "HealthbarNumbers", -tW / 2, -tH / 2, color_white )
             cam.End3D2D()
         end
     end

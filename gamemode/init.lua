@@ -1,6 +1,8 @@
-AddCSLuaFile( "cl_init.lua" )
-AddCSLuaFile( "vgui/world-space/healthbar.lua" )
-AddCSLuaFile( "shared.lua" )
+AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("vgui/world-space/healthbar.lua")
+AddCSLuaFile("vgui/canvas-space/help/help-base-hud.lua")
+AddCSLuaFile("cl/inputmanager.lua")
+AddCSLuaFile("shared.lua" )
 
 include( "shared.lua" )
 
