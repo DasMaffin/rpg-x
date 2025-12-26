@@ -1,0 +1,9 @@
+"rpgx"
+{
+	"base"		    "base"
+	"title"		    "RPG X"
+	"maps"		    "^rpgx_"
+	"category"	    "pve"
+	"menusystem"	"1"
+	"workshopid"	"3629503006"
+}
