@@ -11,13 +11,9 @@ function GM:PlayerSpawn(ply)
 
     ply:SetModel("models/player/kleiner.mdl")
 
-    local swepClass = "weapon_prinnyknife" -- SWEP class name
-
-    if weapons.Get(swepClass) then
-        ply:StripWeapons()           -- optional: remove other weapons
+    if weapons.Get("weapon_fists") then
+        ply:StripWeapons()
         ply:Give("weapon_fists")
-    else
-        print("[GM WARNING] SWEP not found: " .. swepClass)
     end
 end
 
