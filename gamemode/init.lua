@@ -15,35 +15,32 @@ function GM:PlayerSpawn(ply)
 
     if weapons.Get(swepClass) then
         ply:StripWeapons()           -- optional: remove other weapons
-        ply:Give(swepClass)          -- give the SWEP
-        ply:SelectWeapon(swepClass)  -- equip immediately
+        ply:Give("weapon_fists")
     else
         print("[GM WARNING] SWEP not found: " .. swepClass)
     end
 end
 
+function GM:GetFallDamage(ply, speed)
+    return speed * 0.03
+end
+
 function GM:InitPostEntity()
     if SERVER then
-        for i = 1, 1 do
-            for j = 1, 1 do
-                -- Create the antlion
-                local antlion = ents.Create("npc_antlion")
-                if not IsValid(antlion) then return end
+        local spawnPoints =  util.JSONToTable(file.Read("rpgxspawnpoints/spawnpoints.json", "DATA"), false) or {}
 
-                -- Set position in front of the spawn point
-                antlion.spawnPos = Vector(100 * i, 100 * j, 100)
-                antlion:SetPos(antlion.spawnPos) -- Change coordinates as needed
+        for _, spawnData in pairs(spawnPoints[game.GetMap()]) do
+            local entity = ents.Create(spawnData.settings.SelectedNPCs[1]) -- TODO Change to random selection later
+            if not IsValid(entity) then return end
 
-                -- Make it passive
-                antlion:SetKeyValue("sleepstate", 0)
+            entity.spawnData = table.Copy(spawnData)
+            entity:SetPos(Vector(spawnData.position.x, spawnData.position.y, spawnData.position.z))
 
-                antlion:Spawn()
-                antlion:Activate()
-                
-                -- Set health
-                antlion:SetMaxHealth(400)
-                antlion:SetHealth(400)
-            end
+            entity:Spawn()
+            entity:Activate()
+
+            entity:SetMaxHealth(15)
+            entity:SetHealth(15)
         end
     end
 end
@@ -56,8 +53,8 @@ function RPGX:OnNPCKilled(npc, attacker, inflictor, base)
             if not IsValid(antlion) then return end
 
             -- Set position in front of the spawn point
-            antlion.spawnPos = npc.spawnPos
-            antlion:SetPos(antlion.spawnPos) -- Change coordinates as needed
+            antlion.spawnData = npc.spawnData
+            antlion:SetPos(Vector(antlion.spawnData.position.x, antlion.spawnData.position.y, antlion.spawnData.position.z)) -- Change coordinates as needed
 
             -- Make it passive
             antlion:SetKeyValue("sleepstate", 0)
@@ -66,8 +63,8 @@ function RPGX:OnNPCKilled(npc, attacker, inflictor, base)
             antlion:Activate()
 
             -- Set health
-            antlion:SetMaxHealth(400)
-            antlion:SetHealth(400)
+            antlion:SetMaxHealth(40)
+            antlion:SetHealth(40)
         end
     end
     return base.method(base.gamemode, npc, attacker, inflictor)
