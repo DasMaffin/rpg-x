@@ -58,10 +58,8 @@ function PANEL:Init()
     -- Register cards container
     self.registerCards = vgui.Create("DIconLayout", self)
     self.registerCards:SetPos(10, 10) -- Position below the close button
-    self.registerCards:SetSize(630, self.lineY - 10) -- Height up to the line
+    self.registerCards:SetSize(735, self.lineY - 10) -- Height up to the line
     self.registerCards:SetSpaceX(5) -- Spacing between cards
-    
-    
     
     -- Styled scroll panel
     self.scrollPanel = vgui.Create("DScrollPanel", self)
@@ -86,6 +84,18 @@ function PANEL:Init()
     self:AddRegisterCard("Русский", self:CreateLanguageLayout("Russian"))
     self:AddRegisterCard("中文", self:CreateLanguageLayout("Chinese"))
     self:AddRegisterCard("العربية", self:CreateLanguageLayout("Arabic"))
+    if ULib and ulx then
+        self.ulxLayout = vgui.Create("DPanel", self.scrollPanel)
+        self.ulxLayout:SetSize(self.scrollPanel:GetWide(), self.scrollPanel:GetTall())
+        self.ulxLayout.Paint = function(s, w, h)
+            draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 10))
+        end
+        local function openULX()
+            RunConsoleCommand("ulx", "menu")
+            RPGX:ToggleHelpMenu()
+        end
+        self:AddRegisterCard("ULX Menu", self.ulxLayout, openULX)
+    end
 
     self:CloseAllCards()
     self:DrawCards(1)
@@ -116,7 +126,7 @@ cards = {
 local names = {}
 local switchTabs = {}
 local lastSelectedIndex = 1
-function PANEL:AddRegisterCard(name, layout)
+function PANEL:AddRegisterCard(name, layout, method)
     local card = vgui.Create("DButton", self.registerCards)
     card:SetSize(100, self.lineY - 10)
     card:SetText("")
@@ -129,6 +139,9 @@ function PANEL:AddRegisterCard(name, layout)
         lastSelectedIndex = switchTabs[name].index
         self:DrawCards(lastSelectedIndex)
         layout:SetVisible(true)
+        if method then
+            method()
+        end
     end
     card.DoClick = function()
         self:CloseAllCards()
